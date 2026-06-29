@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="JS Jesus — Car Wash profesional en Santo Domingo. Lavado básico, premium, detallado completo, pulido y más. Reserva tu turno hoy.">
+  <meta name="theme-color" content="#060d1f">
+
+  <!-- Open Graph -->
+  <meta property="og:title"       content="JS Jesus — Car Wash Profesional">
+  <meta property="og:description" content="Tu vehículo merece el mejor cuidado. Servicio premium en Santo Domingo.">
+  <meta property="og:type"        content="website">
+
+  <title>JS Jesus — Car Wash Premium</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+
+<div id="intro-screen" aria-hidden="true" role="presentation">
+ 
+  <!-- Capa de fondo: gradiente + noise -->
+  <div class="intro-bg"></div>
+ 
+  <!-- Canvas de partículas -->
+  <canvas id="intro-particles-canvas"></canvas>
+ 
+  <!-- Scan line horizontal -->
+  <div class="intro-scanline"></div>
+ 
+  <!-- Glow ambiental central -->
+  <div class="intro-glow"></div>
+ 
+  <!-- Carro SVG flotante -->
+  <div class="intro-car-wrapper" aria-hidden="true">
+    <svg class="intro-car-svg" viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ic-body" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#7ab4ff" stop-opacity="0.9"/>
+          <stop offset="42%"  stop-color="#2563eb" stop-opacity="0.95"/>
+          <stop offset="100%" stop-color="#060f2c" stop-opacity="1"/>
+        </linearGradient>
+        <radialGradient id="ic-rim" cx="35%" cy="35%" r="70%">
+          <stop offset="0%"   stop-color="#e2e8f0"/>
+          <stop offset="60%"  stop-color="#94a3b8"/>
+          <stop offset="100%" stop-color="#1e293b"/>
+        </radialGradient>
+        <linearGradient id="ic-glass" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"   stop-color="#e0f2fe" stop-opacity="0.95"/>
+          <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.85"/>
+        </linearGradient>
+        <filter id="ic-glow-filter" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="6" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <linearGradient id="ic-floor-ref" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#2563eb" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+ 
+      <!-- Reflexión en el suelo -->
+      <g transform="translate(0,292) scale(1,-0.28)" style="opacity:0.35">
+        <path d="M44,242 C36,242 32,229 40,216 L56,198 C72,170 118,160 172,158 C196,122 240,88 296,78 C364,66 452,64 524,69 C568,72 598,84 618,106 L648,138 C696,143 756,148 796,158 C830,167 852,180 858,198 C862,212 855,228 838,236 C832,239 826,242 818,242 Z"
+              fill="url(#ic-body)"/>
+      </g>
+      <rect x="56" y="269" width="764" height="18" fill="url(#ic-floor-ref)" rx="2"/>
+ 
+      <!-- Sombra base -->
+      <ellipse cx="450" cy="284" rx="376" ry="10" fill="rgba(0,0,0,0.55)"/>
+ 
+      <!-- Carrocería -->
+      <path d="M44,242 C36,242 32,229 40,216 L56,198 C72,170 118,160 172,158 C196,122 240,88 296,78 C364,66 452,64 524,69 C568,72 598,84 618,106 L648,138 C696,143 756,148 796,158 C830,167 852,180 858,198 C862,212 855,228 838,236 C832,239 826,242 818,242 Z"
+            fill="url(#ic-body)" filter="url(#ic-glow-filter)"/>
+ 
+      <!-- Skirt -->
+      <path d="M56,220 C150,211 400,207 450,207 C615,207 755,211 840,220 L840,242 L56,242 Z"
+            fill="#04060f"/>
+ 
+      <!-- Cristalería cerrada -->
+      <path d="M182,158 C202,126 246,96 300,86 C368,76 452,74 520,79 C560,82 585,92 600,109 L624,140 L608,148 C582,128 552,117 518,114 C456,109 376,111 312,122 C262,131 228,147 212,170 Z"
+            fill="url(#ic-glass)"/>
+ 
+      <!-- Highlight cristal -->
+      <path d="M254,106 L296,94 L316,115 L272,128 Z" fill="rgba(255,255,255,0.42)"/>
+      <path d="M330,90 L360,84 L372,100 L342,108 Z" fill="rgba(255,255,255,0.18)"/>
+ 
+      <!-- Pilares A y C -->
+      <path d="M168,160 L183,158 L198,142 L184,138 Z" fill="#0d1a3a"/>
+      <path d="M600,108 L626,142 L638,136 L612,100 Z" fill="#0d1a3a"/>
+ 
+      <!-- Crease line -->
+      <path d="M66,194 C195,185 500,183 836,194"
+            stroke="rgba(255,255,255,0.06)" stroke-width="2" fill="none"/>
+ 
+      <!-- Chrome highlight superior -->
+      <path d="M175,158 C226,120 305,90 396,80 C474,73 554,76 608,102"
+            stroke="rgba(255,255,255,0.22)" stroke-width="2" fill="none" stroke-linecap="round"/>
+ 
+      <!-- Espejo lateral -->
+      <path d="M624,99 C638,92 652,97 648,107 C644,115 630,113 624,106 Z"
+            fill="#1a3a8a"/>
+ 
+      <!-- Faro delantero LED -->
+      <path d="M818,180 L856,188 L856,206 L818,199 Z"
+            fill="#fef9c3" opacity="0.92"/>
+      <line x1="820" y1="196" x2="854" y2="200"
+            stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+      <!-- Glow faro -->
+      <ellipse cx="850" cy="194" rx="28" ry="10"
+               fill="rgba(96,165,250,0.18)" filter="url(#ic-glow-filter)"/>
+ 
+      <!-- Faro trasero -->
+      <path d="M42,188 L58,188 L58,212 L42,212 Z"
+            fill="#f87171" opacity="0.88"/>
+      <ellipse cx="48" cy="200" rx="20" ry="8"
+               fill="rgba(248,113,113,0.15)" filter="url(#ic-glow-filter)"/>
+ 
+      <!-- Pasarruedas sombras -->
+      <ellipse cx="196" cy="232" rx="66" ry="34" fill="rgba(4,8,22,0.55)"/>
+      <ellipse cx="738" cy="232" rx="66" ry="34" fill="rgba(4,8,22,0.55)"/>
+ 
+      <!-- Rueda trasera -->
+      <g transform="translate(196,244)">
+        <circle r="50" fill="#03050b"/>
+        <circle r="50" fill="none" stroke="rgba(28,36,51,0.9)" stroke-width="3"/>
+        <circle r="34" fill="url(#ic-rim)"/>
+        <!-- 5 rayos -->
+        <g stroke="#4a5568" stroke-width="5.5" stroke-linecap="round">
+          <line x1="0" y1="-10" x2="0"   y2="-30" transform="rotate(0)"/>
+          <line x1="0" y1="-10" x2="0"   y2="-30" transform="rotate(72)"/>
+          <line x1="0" y1="-10" x2="0"   y2="-30" transform="rotate(144)"/>
+          <line x1="0" y1="-10" x2="0"   y2="-30" transform="rotate(216)"/>
+          <line x1="0" y1="-10" x2="0"   y2="-30" transform="rotate(288)"/>
+        </g>
+        <circle r="12" fill="#1e293b" stroke="#4a5568" stroke-width="2"/>
+        <circle r="5"  fill="#94a3b8"/>
+        <!-- Brake disc hint -->
+        <circle r="22" fill="none" stroke="rgba(96,165,250,0.12)" stroke-width="1"/>
+      </g>
+ 
+      <!-- Rueda delantera -->
+      <g transform="translate(738,244)">
+        <circle r="50" fill="#03050b"/>
+        <circle r="50" fill="none" stroke="rgba(28,36,51,0.9)" stroke-width="3"/>
+        <circle r="34" fill="url(#ic-rim)"/>
+        <g stroke="#4a5568" stroke-width="5.5" stroke-linecap="round">
+          <line x1="0" y1="-10" x2="0"   y2="-30" transform="rotate(18)"/>
+          <line x1="0" y1="-10" x2="0"   y2="-30" transform="rotate(90)"/>
+          <line x1="0" y1="-10" x2="0"   y2="-30" transform="rotate(162)"/>
+          <line x1="0" y1="-10" x2="0"   y2="-30" transform="rotate(234)"/>
+          <line x1="0" y1="-10" x2="0"   y2="-30" transform="rotate(306)"/>
+        </g>
+        <circle r="12" fill="#1e293b" stroke="#4a5568" stroke-width="2"/>
+        <circle r="5"  fill="#94a3b8"/>
+        <circle r="22" fill="none" stroke="rgba(96,165,250,0.12)" stroke-width="1"/>
+      </g>
+ 
+      <!-- Reflejo suelo -->
+      <path d="M100,260 C270,252 630,252 800,260"
+            stroke="rgba(37,99,235,0.22)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+ 
+  <!-- Logo centrado -->
+  <div class="intro-logo-wrap">
+    <div class="intro-logo-inner">
+ 
+      <!-- Eyebrow -->
+      <div class="intro-eyebrow">
+        <span class="intro-eyebrow-line"></span>
+        <span class="intro-eyebrow-text">Car Wash Premium · Santo Domingo</span>
+        <span class="intro-eyebrow-line"></span>
+      </div>
+ 
+      <!-- Nombre principal -->
+      <h1 class="intro-brand">
+        <span class="intro-brand-js">JS.</span><span class="intro-brand-jesus">Jesus</span>
+      </h1>
+ 
+      <!-- Tagline -->
+      <p class="intro-tagline">Tu vehículo merece el <em>mejor</em> cuidado.</p>
+ 
+    </div>
+  </div>
+ 
+  <!-- Barra de carga -->
+  <div class="intro-loader-wrap">
+    <div class="intro-loader-track">
+      <div class="intro-loader-fill" id="intro-loader-fill"></div>
+    </div>
+  </div>
+ 
+</div>
+<!-- /intro-screen -->
+
+<!-- ════════════════════════════════════
+     NAVBAR
+════════════════════════════════════ -->
+<nav id="navbar" role="navigation" aria-label="Navegación principal">
+  <div class="container">
+    <div class="nav-inner">
+
+      <a href="#" class="nav-logo" aria-label="JS Jesus CarWash — Inicio">
+        JS.<span>Jesus</span>
+      </a>
+
+      <div class="nav-links" role="list">
+        <a href="#servicios"   role="listitem">Servicios</a>
+        <a href="#porque"      role="listitem">Nosotros</a>
+        <a href="#galeria"     role="listitem">Galería</a>
+        <a href="#testimonios" role="listitem">Testimonios</a>
+        <a href="#reservar"    role="listitem">Reservar</a>
+        <a href="#ubicacion"   role="listitem">Ubicación</a>
+      </div>
+
+      <a href="#reservar" class="btn btn-primary nav-cta">Reservar ahora</a>
+
+      <button class="nav-hamburger" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+    </div>
+  </div>
+</nav>
+
+<!-- Menú móvil -->
+<div class="nav-mobile" role="dialog" aria-label="Menú móvil">
+  <button class="nav-mobile-close" aria-label="Cerrar menú">✕</button>
+  <a href="#servicios">Servicios</a>
+  <a href="#porque">Nosotros</a>
+  <a href="#galeria">Galería</a>
+  <a href="#testimonios">Testimonios</a>
+  <a href="#reservar">Reservar</a>
+  <a href="#ubicacion">Ubicación</a>
+</div>
+
+
+<!-- ════════════════════════════════════
+     HERO
+════════════════════════════════════ -->
+<section id="hero" aria-label="Portada">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+
+  <!-- Orbs -->
+  <div class="hero-orb orb-1" aria-hidden="true"></div>
+  <div class="hero-orb orb-2" aria-hidden="true"></div>
+  <div class="hero-orb orb-3" aria-hidden="true"></div>
+
+  <!-- Rain -->
+  <div class="hero-rain" aria-hidden="true"></div>
+
+  <!-- Carro decorativo -->
+  <div class="hero-car" aria-hidden="true">
+    <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="hcBody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#7ab4ff"/>
+          <stop offset="40%"  stop-color="#2563eb"/>
+          <stop offset="100%" stop-color="#060f2c"/>
+        </linearGradient>
+        <radialGradient id="hcRim" cx="35%" cy="35%" r="70%">
+          <stop offset="0%"   stop-color="#e2e8f0"/>
+          <stop offset="60%"  stop-color="#94a3b8"/>
+          <stop offset="100%" stop-color="#1e293b"/>
+        </radialGradient>
+        <linearGradient id="hcGlass" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"   stop-color="#e0f2fe"/>
+          <stop offset="100%" stop-color="#3b82f6"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Sombra -->
+      <ellipse cx="450" cy="282" rx="380" ry="14" fill="rgba(37,99,235,0.3)"/>
+
+      <!-- Carrocería deportiva -->
+      <path d="M44,242 C36,242 32,229 40,216 L56,198
+               C72,170 118,160 172,158
+               C196,122 240,88 296,78
+               C364,66 452,64 524,69
+               C568,72 598,84 618,106
+               L648,138
+               C696,143 756,148 796,158
+               C830,167 852,180 858,198
+               C862,212 855,228 838,236
+               C832,239 826,242 818,242 Z"
+            fill="url(#hcBody)"/>
+
+      <!-- Skirt -->
+      <path d="M56,220 C150,211 400,207 450,207 C615,207 755,211 840,220 L840,242 L56,242 Z"
+            fill="#06091e"/>
+
+      <!-- Cristalería cerrada -->
+      <path d="M182,158 C202,126 246,96 300,86
+               C368,76 452,74 520,79
+               C560,82 585,92 600,109
+               L624,140 L608,148
+               C582,128 552,117 518,114
+               C456,109 376,111 312,122
+               C262,131 228,147 212,170 Z"
+            fill="url(#hcGlass)" opacity="0.88"/>
+
+      <!-- Reflejo cristal -->
+      <path d="M254,106 L296,94 L316,115 L272,128 Z" fill="rgba(255,255,255,0.38)"/>
+
+      <!-- Pilares -->
+      <path d="M168,160 L183,158 L198,142 L184,138 Z" fill="#112060"/>
+      <path d="M600,108 L626,142 L638,136 L612,100 Z" fill="#112060"/>
+
+      <!-- Crease line -->
+      <path d="M66,194 C195,185 500,183 836,194" stroke="rgba(255,255,255,0.07)" stroke-width="2" fill="none"/>
+
+      <!-- Espejo -->
+      <path d="M624,99 C638,92 652,97 648,107 C644,115 630,113 624,106 Z" fill="#1a3a8a"/>
+
+      <!-- Faro delantero LED -->
+      <path d="M818,180 L852,187 L852,204 L818,198 Z" fill="#fef9c3" opacity="0.9"/>
+      <line x1="820" y1="195" x2="850" y2="198" stroke="#60a5fa" stroke-width="2" opacity="0.7"/>
+
+      <!-- Faro trasero -->
+      <path d="M42,188 L58,188 L58,212 L42,212 Z" fill="#f87171" opacity="0.85"/>
+
+      <!-- Chrome highlight -->
+      <path d="M175,158 C226,120 305,90 396,80 C474,73 554,76 608,102"
+            stroke="rgba(255,255,255,0.28)" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+      <!-- Pasarruedas -->
+      <ellipse cx="196" cy="228" rx="64" ry="38" fill="rgba(4,8,22,0.5)"/>
+      <ellipse cx="738" cy="228" rx="64" ry="38" fill="rgba(4,8,22,0.5)"/>
+
+      <!-- Rueda trasera -->
+      <g transform="translate(196,242)">
+        <circle r="48" fill="#04060d"/>
+        <circle r="48" fill="none" stroke="#1c2433" stroke-width="3"/>
+        <circle r="32" fill="url(#hcRim)"/>
+        <g stroke="#475569" stroke-width="5" stroke-linecap="round">
+          <line x1="0" y1="0" x2="0"  y2="-28" transform="rotate(0)"/>
+          <line x1="0" y1="0" x2="0"  y2="-28" transform="rotate(72)"/>
+          <line x1="0" y1="0" x2="0"  y2="-28" transform="rotate(144)"/>
+          <line x1="0" y1="0" x2="0"  y2="-28" transform="rotate(216)"/>
+          <line x1="0" y1="0" x2="0"  y2="-28" transform="rotate(288)"/>
+        </g>
+        <circle r="12" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+        <circle r="5"  fill="#94a3b8"/>
+      </g>
+
+      <!-- Rueda delantera -->
+      <g transform="translate(738,242)">
+        <circle r="48" fill="#04060d"/>
+        <circle r="48" fill="none" stroke="#1c2433" stroke-width="3"/>
+        <circle r="32" fill="url(#hcRim)"/>
+        <g stroke="#475569" stroke-width="5" stroke-linecap="round">
+          <line x1="0" y1="0" x2="0"  y2="-28" transform="rotate(0)"/>
+          <line x1="0" y1="0" x2="0"  y2="-28" transform="rotate(72)"/>
+          <line x1="0" y1="0" x2="0"  y2="-28" transform="rotate(144)"/>
+          <line x1="0" y1="0" x2="0"  y2="-28" transform="rotate(216)"/>
+          <line x1="0" y1="0" x2="0"  y2="-28" transform="rotate(288)"/>
+        </g>
+        <circle r="12" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+        <circle r="5"  fill="#94a3b8"/>
+      </g>
+
+      <!-- Reflejos piso -->
+      <path d="M100,258 C270,250 630,250 800,258" stroke="rgba(37,99,235,0.25)" stroke-width="1.5" fill="none"/>
+    </svg>
+  </div>
+
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span></span>
+        Servicio Premium · Santo Domingo · Santiago
+      </div>
+      <h1>Tu vehículo<br>merece el <em>mejor</em><br>cuidado.</h1>
+      <p class="hero-sub">
+        En JS Jesus CarWash combinamos tecnología de punta, productos premium
+        y un equipo capacitado para devolverte el brillo que tu auto merece.
+        Rápido, seguro y garantizado.
+      </p>
+      <div class="hero-actions">
+        <a href="#reservar"  class="btn btn-primary">
+          Reservar ahora
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#servicios" class="btn btn-outline">Ver servicios</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll" aria-hidden="true">
+    <span>Deslizar</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     SERVICIOS
+════════════════════════════════════ -->
+<section id="servicios" aria-labelledby="svc-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Lo que hacemos</p>
+      <h2 id="svc-title">Nuestros <span>Servicios</span></h2>
+      <p>Cada servicio está diseñado para darle a tu vehículo el tratamiento que merece.</p>
+    </div>
+
+    <div class="services-grid">
+
+      <!-- Sedán -->
+      <div class="svc-card" data-delay="60">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="10" width="20" height="8" rx="2"/>
+            <path d="M4 10L7 4h10l3 6"/>
+            <!-- Ventanas cerradas -->
+            <path d="M5 10L7.5 5h3v5z" fill="currentColor" opacity="0.15"/>
+            <path d="M10.5 5H16L18 10h-7.5z" fill="currentColor" opacity="0.15"/>
+            <circle cx="7" cy="18" r="1.5" fill="currentColor"/>
+            <circle cx="17" cy="18" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="svc-tag">Sedán</span>
+        <h3 class="svc-name">Lavado de Motor</h3>
+        <p class="svc-desc">Limpieza profunda del motor a presión. Tu motor queda impecable.</p>
+        <div class="svc-foot">
+          <span class="svc-price">RD$500</span>
+          <span class="svc-time">~25 min</span>
+        </div>
+      </div>
+
+      <!-- SUV Mediana -->
+     <div class="svc-card" data-delay="60">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="10" width="20" height="8" rx="2"/>
+            <path d="M4 10L7 4h10l3 6"/>
+            <!-- Ventanas cerradas -->
+            <path d="M5 10L7.5 5h3v5z" fill="currentColor" opacity="0.15"/>
+            <path d="M10.5 5H16L18 10h-7.5z" fill="currentColor" opacity="0.15"/>
+            <circle cx="7" cy="18" r="1.5" fill="currentColor"/>
+            <circle cx="17" cy="18" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="svc-tag">SUV Mediana</span>
+        <h3 class="svc-name">Lavado de Motor</h3>
+        <p class="svc-desc">Limpieza profunda del motor a presión. Tu motor queda impecable.</p>
+        <div class="svc-foot">
+          <span class="svc-price">RD$600</span>
+          <span class="svc-time">~25 min</span>
+        </div>
+      </div>
+
+      <!-- Camionetas -->
+       <div class="svc-card" data-delay="120">
+        <div class="svc-icon">
+          <svg viewBox="0 0 26 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Cabina cerrada -->
+            <rect x="1" y="8" width="16" height="10" rx="2"/>
+            <path d="M3 8L6 2h8l2 6"/>
+            <!-- Ventanas cabina cerradas -->
+            <path d="M4 8L6.5 3h3v5z" fill="currentColor" opacity="0.18"/>
+            <path d="M9.5 3H13L15 8H9.5z" fill="currentColor" opacity="0.18"/>
+            <!-- Cama trasera -->
+            <rect x="17" y="10" width="8" height="8" rx="1"/>
+            <line x1="17" y1="10" x2="17" y2="18" stroke="currentColor" stroke-width="2"/>
+            <!-- Ruedas cerradas -->
+            <circle cx="6" cy="18" r="2" fill="currentColor" opacity="0.3"/>
+            <circle cx="6" cy="18" r="1" fill="currentColor"/>
+            <circle cx="20" cy="18" r="2" fill="currentColor" opacity="0.3"/>
+            <circle cx="20" cy="18" r="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="svc-tag">Camionetas</span>
+        <h3 class="svc-name">Lavado de Motor</h3>
+        <p class="svc-desc">Limpieza profunda del motor a presión. Tu motor queda impecable.</p>
+        <div class="svc-foot">
+          <span class="svc-price">RD$700</span>
+          <span class="svc-time">~25 min</span>
+        </div>
+      </div>
+
+      <!-- SUV Grande -->
+      <div class="svc-card" data-delay="180">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="9" width="22" height="9" rx="2"/>
+            <path d="M3 9L6 3h12l3 6"/>
+            <!-- 3 ventanas cerradas -->
+            <path d="M4 9L6 4h3.5v5z" fill="currentColor" opacity="0.18"/>
+            <path d="M9.5 4h5l1.5 5h-6.5z" fill="currentColor" opacity="0.18"/>
+            <path d="M16 4h3l1 5h-4z" fill="currentColor" opacity="0.18"/>
+            <circle cx="7" cy="18" r="2" fill="currentColor" opacity="0.25"/>
+            <circle cx="7" cy="18" r="1" fill="currentColor"/>
+            <circle cx="17" cy="18" r="2" fill="currentColor" opacity="0.25"/>
+            <circle cx="17" cy="18" r="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="svc-tag">SUV Grande</span>
+        <h3 class="svc-name">Lavado de Motor</h3>
+        <p class="svc-desc">ELimpieza profunda del motor a presión. Tu motor queda impecable.</p>
+        <div class="svc-foot">
+          <span class="svc-price">RD$1,000</span>
+          <span class="svc-time">~30 min</span>
+        </div>
+      </div>
+
+      <!-- Remolques / Camiones -->
+       <div class="svc-card featured" data-delay="240">
+        <div class="svc-icon">
+          <svg viewBox="0 0 28 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Cabina cerrada -->
+            <rect x="1" y="6" width="10" height="10" rx="2"/>
+            <!-- Ventana cabina cerrada -->
+            <path d="M2 6L3 2h6l1 4z" fill="currentColor" opacity="0.25"/>
+            <!-- Trailer cerrado -->
+            <rect x="11" y="4" width="16" height="12" rx="2"/>
+            <!-- Líneas del trailer -->
+            <line x1="14" y1="4" x2="14" y2="16" stroke="currentColor" stroke-width="1"/>
+            <line x1="18" y1="4" x2="18" y2="16" stroke="currentColor" stroke-width="1"/>
+            <line x1="22" y1="4" x2="22" y2="16" stroke="currentColor" stroke-width="1"/>
+            <circle cx="5" cy="17" r="2" fill="currentColor" opacity="0.3"/>
+            <circle cx="5" cy="17" r="1" fill="currentColor"/>
+            <circle cx="20" cy="17" r="2" fill="currentColor" opacity="0.3"/>
+            <circle cx="20" cy="17" r="1" fill="currentColor"/>
+            <circle cx="25" cy="17" r="2" fill="currentColor" opacity="0.3"/>
+            <circle cx="25" cy="17" r="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="svc-tag">Remolques / Camiones</span>
+        <h3 class="svc-name">Lavado de Motor</h3>
+        <p class="svc-desc">Servicio especializado para vehículos de gran tonelaje. Limpieza a presión de alta potencia.</p>
+        <div class="svc-foot">
+          <span class="svc-price">RD$1,000</span>
+          <span class="svc-time">~1 hr</span>
+        </div>
+      </div>
+
+      <!-- Restauración luces — carros  -->
+     <div class="svc-card" data-delay="300">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <line x1="12" y1="2"  x2="12" y2="4"/>
+            <line x1="12" y1="20" x2="12" y2="22"/>
+            <line x1="4.22"  y1="4.22"  x2="5.64"  y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="2"  y1="12" x2="4"  y2="12"/>
+            <line x1="20" y1="12" x2="22" y2="12"/>
+            <line x1="4.22"  y1="19.78" x2="5.64"  y2="18.36"/>
+            <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"/>
+          </svg>
+        </div>
+        <span class="svc-tag">Luces de carros</span>
+        <h3 class="svc-name">Restauración de Luces</h3>
+        <p class="svc-desc">ESi vienen amarillas, te las dejamos como nuevas. Recuperá la visibilidad y el look original.</p>
+        <div class="svc-foot">
+          <span class="svc-price">RD$300</span>
+          <span class="svc-time">~25 min</span>
+        </div>
+      </div>
+
+      <!-- Restauración luces — motores y pasolas  -->
+      <div class="svc-card" data-delay="360">
+        <div class="svc-icon">
+          <svg viewBox="0 0 28 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Moto/pasola cerrada -->
+            <!-- Chasis -->
+            <path d="M8 12 L12 6 L18 6 L22 12"/>
+            <path d="M8 12 L6 16"/>
+            <path d="M22 12 L22 16"/>
+            <!-- Manillar -->
+            <path d="M18 6 L20 4 L22 4"/>
+            <!-- Asiento cerrado -->
+            <path d="M12 6 L18 6 L18 9 L12 9 Z" fill="currentColor" opacity="0.2"/>
+            <!-- Rueda delantera cerrada -->
+            <circle cx="22" cy="17" r="4"/>
+            <circle cx="22" cy="17" r="2" fill="currentColor" opacity="0.2"/>
+            <circle cx="22" cy="17" r="1" fill="currentColor"/>
+            <!-- Rueda trasera cerrada -->
+            <circle cx="6" cy="17" r="4"/>
+            <circle cx="6" cy="17" r="2" fill="currentColor" opacity="0.2"/>
+            <circle cx="6" cy="17" r="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="svc-tag">Luces de motores y pasolas</span>
+        <h3 class="svc-name">Restauración de Luces</h3>
+        <p class="svc-desc">El mismo servicio premium de restauración, adaptado para motores y pasolas.</p>
+        <div class="svc-foot">
+          <span class="svc-price">RD$150</span>
+          <span class="svc-time">~25 min</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     POR QUÉ ELEGIRNOS
+════════════════════════════════════ -->
+<section id="porque" aria-labelledby="porque-title">
+  <div class="container">
+    <div class="porque-wrap">
+
+      <div class="porque-left reveal-left">
+        <p class="eyebrow">Nuestra diferencia</p>
+        <h2 id="porque-title">¿Por qué elegir<br><span>JS Jesus CarWash?</span></h2>
+        <p>No somos solo un car wash. Somos un equipo apasionado que trata cada vehículo como propio. Cada detalle importa, cada cliente regresa.</p>
+        <a href="#reservar" class="btn btn-primary">Agenda tu turno</a>
+      </div>
+
+      <div class="porque-items reveal-right">
+
+        <div class="porque-item" data-delay="0">
+          <div class="porque-icon">
+            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div>
+            <h4>Atención ultra rápida</h4>
+            <p>Optimizamos cada proceso para que esperes lo menos posible sin sacrificar calidad. Tu tiempo es nuestro tiempo.</p>
+          </div>
+        </div>
+
+        <div class="porque-item" data-delay="80">
+          <div class="porque-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <h4>Productos premium certificados</h4>
+            <p>Usamos productos biodegradables de alta gama, seguros para tu pintura, tus tapizados y el medio ambiente.</p>
+          </div>
+        </div>
+
+        <div class="porque-item" data-delay="160">
+          <div class="porque-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div>
+            <h4>Personal capacitado y certificado</h4>
+            <p>Nuestro equipo se entrena continuamente con las mejores técnicas de detailing del mercado internacional.</p>
+          </div>
+        </div>
+
+        <div class="porque-item" data-delay="240">
+          <div class="porque-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+          </div>
+          <div>
+            <h4>Resultados 100% garantizados</h4>
+            <p>Si no quedas satisfecho, repetimos el servicio sin costo adicional. Tu satisfacción es nuestra garantía.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     GALERÍA
+════════════════════════════════════ -->
+<section id="galeria" aria-labelledby="galeria-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Nuestro trabajo</p>
+      <h2 id="galeria-title">Antes &amp; <span>Después</span></h2>
+      <p>Cada imagen cuenta una historia de transformación. Agrega tus fotos reales aquí.</p>
+    </div>
+
+    <div class="gallery-grid">
+
+      <!-- Tarjetas placeholder — reemplaza con img src="ruta/tu-foto.jpg" -->
+      <div class="gallery-item placeholder reveal">
+        <div class="ph-inner">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Foto Antes #1</span>
+        </div>
+        <div class="gallery-overlay"><div class="gallery-label"><span class="label-before">Antes</span>Sedán familiar</div></div>
+      </div>
+
+      <div class="gallery-item placeholder reveal" data-delay="60" style="min-height:280px">
+        <div class="ph-inner">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Foto Después #1</span>
+        </div>
+        <div class="gallery-overlay"><div class="gallery-label"><span class="label-after">Después</span>Sedán familiar</div></div>
+      </div>
+
+      <div class="gallery-item placeholder reveal" data-delay="120">
+        <div class="ph-inner">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Foto Antes #2</span>
+        </div>
+        <div class="gallery-overlay"><div class="gallery-label"><span class="label-before">Antes</span>SUV doble cabina</div></div>
+      </div>
+
+      <div class="gallery-item placeholder reveal" style="min-height:260px">
+        <div class="ph-inner">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Foto Después #2</span>
+        </div>
+        <div class="gallery-overlay"><div class="gallery-label"><span class="label-after">Después</span>SUV doble cabina</div></div>
+      </div>
+
+      <div class="gallery-item placeholder reveal" data-delay="60" style="min-height:300px">
+        <div class="ph-inner">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Foto Motor Antes</span>
+        </div>
+        <div class="gallery-overlay"><div class="gallery-label"><span class="label-before">Antes</span>Motor — Pickup</div></div>
+      </div>
+
+      <div class="gallery-item placeholder reveal" data-delay="120">
+        <div class="ph-inner">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Foto Motor Después</span>
+        </div>
+        <div class="gallery-overlay"><div class="gallery-label"><span class="label-after">Después</span>Motor — Pickup</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     ESTADÍSTICAS
+════════════════════════════════════ -->
+<section id="stats" aria-label="Estadísticas">
+  <div class="container">
+    <div class="stats-grid">
+
+      <div class="stat-card reveal">
+        <div class="stat-num" data-target="100" data-suffix="+">0</div>
+        <div class="stat-label">Vehículos lavados</div>
+      </div>
+
+      <div class="stat-card reveal" data-delay="80">
+        <div class="stat-num" data-target="97" data-suffix="%">0</div>
+        <div class="stat-label">Clientes satisfechos</div>
+      </div>
+
+      <div class="stat-card reveal" data-delay="160">
+        <div class="stat-num" data-target="2" data-suffix="">0</div>
+        <div class="stat-label">Años de experiencia</div>
+      </div>
+
+      <div class="stat-card reveal" data-delay="240">
+        <div class="stat-num" data-target="2" data-suffix="">0</div>
+        <div class="stat-label">Profesionales</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     TESTIMONIOS
+════════════════════════════════════ -->
+<section id="testimonios" aria-labelledby="testi-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Lo que dicen</p>
+      <h2 id="testi-title">Clientes <span>felices</span></h2>
+      <p>La satisfacción de nuestros clientes es nuestra mejor carta de presentación.</p>
+    </div>
+
+    <div class="testi-grid">
+
+      <div class="testi-card reveal" data-delay="0">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>"Llevé mi carro hecho un desastre y lo recibí como si fuera nuevo. El nivel de detalle es impresionante. JS Jesus CarWash es mi número uno."</blockquote>
+        <div class="testi-author">
+          <div class="testi-avatar">CM</div>
+          <div>
+            <strong>Carlos Mena</strong>
+            <span>Cliente desde 2026 · Santo Domingo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal" data-delay="80">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>"Contraté el servicio de detallado completo y quedé sin palabras. La pintura quedó como el primer día. Totalmente recomendado."</blockquote>
+        <div class="testi-author">
+          <div class="testi-avatar">LR</div>
+          <div>
+            <strong>Laura Rodríguez</strong>
+            <span>Cliente desde 2025 · Santiago</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal" data-delay="160">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>"Rapidísimos y profesionales. En menos de una hora tenía mi SUV impecable por dentro y por fuera. El mejor car wash de la zona."</blockquote>
+        <div class="testi-author">
+          <div class="testi-avatar">JP</div>
+          <div>
+            <strong>Juan Pérez</strong>
+            <span>Cliente desde 2025 · Santo Domingo</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     RESERVACIONES
+════════════════════════════════════ -->
+<section id="reservar" aria-labelledby="form-title">
+  <div class="container">
+    <div class="form-wrap">
+
+      <!-- Texto izquierda -->
+      <div class="form-text reveal-left">
+        <p class="eyebrow">Agenda tu turno</p>
+        <h2 id="form-title">Reserva tu <span>servicio</span></h2>
+        <p>Completa el formulario y nos pondremos en contacto para confirmar tu cita. También puedes escribirnos directamente por WhatsApp.</p>
+
+        <div class="form-perks">
+          <div class="form-perk">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+            Confirmación inmediata por WhatsApp
+          </div>
+          <div class="form-perk">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+            Sin pago anticipado requerido
+          </div>
+          <div class="form-perk">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+            Cancelación gratuita hasta 2h antes
+          </div>
+          <div class="form-perk">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+            Servicio garantizado o repetición gratis
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div class="booking-form reveal-right">
+
+        <form id="booking-form" novalidate>
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label for="f-name">Nombre completo</label>
+              <input type="text" id="f-name" name="nombre" placeholder="Tu nombre" required>
+              <span class="error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="f-tel">Teléfono / WhatsApp</label>
+              <input type="tel" id="f-tel" name="telefono" placeholder="+1 809 000-0000" required>
+              <span class="error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="f-email">Correo electrónico</label>
+              <input type="email" id="f-email" name="correo" placeholder="tu@correo.com" required>
+              <span class="error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="f-vehicle">Vehículo</label>
+              <input type="text" id="f-vehicle" name="vehiculo" placeholder="Ej: Toyota RAV4 2022" required>
+              <span class="error"></span>
+            </div>
+
+            <div class="form-group full">
+              <label for="f-service">Servicio deseado</label>
+              <select id="f-service" name="servicio" required>
+                <option value="">Selecciona un servicio</option>
+                <option value="basico">Lavado Básico — RD$350</option>
+                <option value="premium">Lavado Premium — RD$750</option>
+                <option value="detallado">Detallado Completo — RD$2,200</option>
+                <option value="pulido">Pulido y Encerado — RD$1,800</option>
+                <option value="motor">Lavado de Motor — RD$900</option>
+                <option value="luces">Restauración de Luces — RD$400</option>
+              </select>
+              <span class="error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="f-date">Fecha preferida</label>
+              <input type="date" id="f-date" name="fecha" required>
+              <span class="error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="f-time">Hora preferida</label>
+              <select id="f-time" name="hora" required>
+                <option value="">Selecciona hora</option>
+                <option>7:00 AM</option>
+                <option>8:00 AM</option>
+                <option>9:00 AM</option>
+                <option>10:00 AM</option>
+                <option>11:00 AM</option>
+                <option>12:00 PM</option>
+                <option>1:00 PM</option>
+                <option>2:00 PM</option>
+                <option>3:00 PM</option>
+                <option>4:00 PM</option>
+                <option>5:00 PM</option>
+              </select>
+              <span class="error"></span>
+            </div>
+
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-submit">
+            Confirmar reservación
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </form>
+
+        <!-- Éxito -->
+        <div class="form-success">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+          <h3>¡Reserva enviada!</h3>
+          <p>Te contactaremos en menos de 2 horas para confirmar tu cita. ¡Gracias por confiar en JS Jesus CarWash!</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     UBICACIÓN
+════════════════════════════════════ -->
+<section id="ubicacion" aria-labelledby="map-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Visítanos</p>
+      <h2 id="map-title">Nuestra <span>Ubicación</span></h2>
+      <p>Encuéntranos fácilmente en el corazón de Santo Domingo o en Santiago.</p>
+    </div>
+
+    <div class="map-wrap">
+
+      <div class="map-info reveal-left">
+
+        <div class="map-info-item">
+          <div class="map-info-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <strong>Santo Domingo</strong>
+            <span>Los Frailes 1 Santo Domingo Este C/ Brisas del Mar #44<br>Santo Domingo, República Dominicana</span>
+          </div>
+        </div>
+
+        <div class="map-info-item">
+          <div class="map-info-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <strong>Santiago</strong>
+            <span>Autopista Duarte Piso/Departamento 2N Arenoso Arriba Al Lado De La N. 80<br>Puñal, Santiago De Los Caballeros</span>
+          </div>
+        </div>
+
+        <div class="map-info-item">
+          <div class="map-info-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div>
+            <strong>Horario de atención</strong>
+            <span>Lunes a Viernes · 7:00 AM – 7:00 PM<br>Sábado · 7:00 AM – 6:00 PM<br>Domingo · 8:00 AM – 2:00 PM</span>
+          </div>
+        </div>
+
+        <div class="map-info-item">
+          <div class="map-info-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 3h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91A16 16 0 0 0 14 15.8l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <strong>Teléfono / WhatsApp</strong>
+            <span>809-499-7692 / 849-285-3440</span>
+          </div>
+        </div>
+
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Los+Frailes+1%2C+Santo+Domingo%2C+Rep%C3%BAblica+Dominicana"
+           class="map-cta-btn" target="_blank" rel="noopener" aria-label="Obtener direcciones en Google Maps">
+          <svg viewBox="0 0 24 24"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+          Cómo llegar
+        </a>
+      </div>
+
+      <div class="map-frame reveal-right">
+        <iframe
+          src="https://maps.google.com/maps?q=Los+Frailes+1%2C+Santo+Domingo%2C+Rep%C3%BAblica+Dominicana&t=&z=15&ie=UTF8&iwloc=&output=embed"
+          title="Ubicación JS Jesus CarWash en Google Maps"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     FOOTER
+════════════════════════════════════ -->
+<footer role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+
+      <div class="footer-brand">
+        <a href="#" class="footer-logo">JS.<span>Jesus</span></a>
+        <p>Car wash premium en Santo Domingo. Tu vehículo merece el mejor cuidado, y nosotros somos la opción definitiva.</p>
+        <div class="footer-socials">
+          <!-- Instagram -->
+          <a href="https://instagram.com/" class="footer-social" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <!-- Facebook -->
+          <a href="https://facebook.com/" class="footer-social" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <!-- WhatsApp -->
+          <a href="https://wa.me/8492853440" class="footer-social" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+          <!-- TikTok -->
+          <a href="https://tiktok.com/" class="footer-social" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Servicios</h4>
+        <ul>
+          <li><a href="#servicios">Lavado de motor a todo tipo de vehículos</a></li>
+          <li><a href="#servicios">Restauración de luces a todo tipo de vehículos</a></li>
+          <li><a href="#servicios">Detallado Completo</a></li>
+          <li><a href="#servicios">Pulido y Encerado</a></li>
+          
+          
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="#porque">Nosotros</a></li>
+          <li><a href="#galeria">Galería</a></li>
+          <li><a href="#testimonios">Testimonios</a></li>
+          <li><a href="#stats">Estadísticas</a></li>
+          <li><a href="#reservar">Reservar</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span><strong>Santo Domingo</strong><br>Los Frailes 1 Santo Domingo Este C/ Brisas del Mar #44</span>
+        </div>
+
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span><strong>Santiago</strong><br>Autopista Duarte Piso/Departamento 2N Arenoso Arriba Al Lado De La N. 80 Puñal Santiago De Los Caballeros</span>
+        </div>
+
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 3h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91A16 16 0 0 0 14 15.8l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+          <span>(Santo Domingo)<br>849-285-3440</span>
+        </div>
+
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 3h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91A16 16 0 0 0 14 15.8l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+          <span>(Santiago)<br>809-499-7692</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 JS Jesus CarWash. Todos los derechos reservados.</p>
+      <span class="footer-badge">DarlisDev</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════
+     FLOATING BUTTONS
+════════════════════════════════════ -->
+<!-- WhatsApp -->
+<a href="https://wa.me/8492853440?text=Hola%2C%20quiero%20reservar%20un%20servicio%20en%20Js%20Jesus%20CarWash"
+   class="fab-wa" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- Volver arriba -->
+<button class="fab-top" aria-label="Volver al inicio">
+  <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<script src="script.js"></script>
+</body>
+</html>
