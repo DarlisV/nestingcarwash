@@ -181,6 +181,7 @@ sections.forEach(s => sectionIO.observe(s));
 /* ── Navbar reveal on load ── */
 document.querySelector('.hero-content')?.classList.add('visible');
 
+
 (function IntroController() {
  
   'use strict';
@@ -405,4 +406,4 @@ document.querySelector('.hero-content')?.classList.add('visible');
   }, 8000);
  
 })();
-/* ── fin IntroController ── *
+/* ── fin IntroController ── */
